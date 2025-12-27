@@ -14805,7 +14805,7 @@ async function sync(inputs) {
     leetcodeRegion,
   } = inputs;
 
-  const region = leetcodeRegion ?? "us";
+  const region = leetcodeRegion;
   const baseUrl = getBaseUrl(region);
 
   const octokit = new Octokit({

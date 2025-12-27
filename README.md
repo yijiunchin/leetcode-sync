@@ -70,7 +70,7 @@ GitHub Action for automatically syncing LeetCode submissions to a GitHub reposit
 - `destination-folder` _(optional)_: The folder in your repo to save the submissions to (necessary for shared repos), default: _none_
 - `verbose` _(optional)_: Adds submission percentiles and question numbers to the repo (requires an additional API call), default: true
 - `commit-header` _(optional)_: How the automated commits should be prefixed, default: 'Sync LeetCode submission'
-- `leetcode-region` _(optional)_: LeetCode region to sync from ("us" for leetcode.com or "cn" for leetcode.cn), default: 'us'
+- `leetcode-region` _(optional)_: LeetCode region to sync from ("us" for leetcode.com or "cn" for leetcode-cn.com), default: 'us'
 
 ## Shared Repos
 

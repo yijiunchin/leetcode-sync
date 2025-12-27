@@ -14522,7 +14522,7 @@ const LANG_TO_EXTENSION = {
 
 function getBaseUrl(region) {
   if (region === "cn") {
-    return "https://leetcode.cn";
+    return "https://leetcode-cn.com";
   }
   return "https://leetcode.com";
 }

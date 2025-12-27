@@ -30,7 +30,7 @@ inputs:
     required: false
     default: 'Sync LeetCode submission'
   leetcode-region:
-    description: 'LeetCode region to sync from ("us" for leetcode.com or "cn" for leetcode.cn)'
+    description: 'LeetCode region to sync from ("us" for leetcode.com or "cn" for leetcode-cn.com)'
     required: false
     default: 'us'
 runs:

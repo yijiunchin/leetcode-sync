@@ -27,7 +27,7 @@ async function main() {
     destinationFolder = config.DESTINATION_FOLDER;
     verbose = config.VERBOSE.toString(); // Convert to string to match core.getInput('verbose') return type
     commitHeader = config.COMMIT_HEADER;
-    leetcodeRegion = config.LEETCODE_REGION ?? "us";
+    leetcodeRegion = config.LEETCODE_REGION;
   } else {
     githubToken = core.getInput("github-token");
     owner = context.repo.owner;

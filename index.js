@@ -7,7 +7,7 @@ const TEST_MODE = process.argv.includes("test");
 
 async function main() {
   let githubToken, owner, repo, leetcodeCSRFToken, leetcodeSession;
-  let filterDuplicateSecs, destinationFolder;
+  let filterDuplicateSecs, destinationFolder, leetcodeRegion;
   if (TEST_MODE) {
     if (
       !config.GITHUB_TOKEN ||
@@ -27,6 +27,7 @@ async function main() {
     destinationFolder = config.DESTINATION_FOLDER;
     verbose = config.VERBOSE.toString(); // Convert to string to match core.getInput('verbose') return type
     commitHeader = config.COMMIT_HEADER;
+    leetcodeRegion = config.LEETCODE_REGION;
   } else {
     githubToken = core.getInput("github-token");
     owner = context.repo.owner;
@@ -37,6 +38,7 @@ async function main() {
     destinationFolder = core.getInput("destination-folder");
     verbose = core.getInput("verbose");
     commitHeader = core.getInput("commit-header");
+    leetcodeRegion = core.getInput("leetcode-region");
   }
 
   await action.sync({
@@ -49,6 +51,7 @@ async function main() {
     destinationFolder,
     verbose,
     commitHeader,
+    leetcodeRegion,
   });
 }
 

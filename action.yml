@@ -29,6 +29,10 @@ inputs:
     description: 'How the automated commits should be prefixed'
     required: false
     default: 'Sync LeetCode submission'
+  leetcode-region:
+    description: 'LeetCode region to sync from ("us" for leetcode.com or "cn" for leetcode.cn)'
+    required: false
+    default: 'us'
 runs:
   using: 'node20'
   main: 'dist/index.js'

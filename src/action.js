@@ -30,7 +30,13 @@ const LANG_TO_EXTENSION = {
   swift: "swift",
   typescript: "ts",
 };
-const BASE_URL = "https://leetcode.com";
+
+function getBaseUrl(region) {
+  if (region === "cn") {
+    return "https://leetcode.cn";
+  }
+  return "https://leetcode.com";
+}
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
@@ -53,17 +59,18 @@ function normalizeName(problemName) {
     .replace(/[^a-zA-Z0-9_-]/gi, "");
 }
 
-function graphqlHeaders(session, csrfToken) {
+function graphqlHeaders(session, csrfToken, region = "us") {
+  const baseUrl = getBaseUrl(region);
   return {
     "content-type": "application/json",
-    origin: BASE_URL,
-    referer: BASE_URL,
+    origin: baseUrl,
+    referer: baseUrl,
     cookie: `csrftoken=${csrfToken}; LEETCODE_SESSION=${session};`,
     "x-csrftoken": csrfToken,
   };
 }
 
-async function getInfo(submission, session, csrfToken) {
+async function getInfo(submission, session, csrfToken, region = "us") {
   let data = JSON.stringify({
     query: `query submissionDetails($submissionId: Int!) {
       submissionDetails(submissionId: $submissionId) {
@@ -78,12 +85,13 @@ async function getInfo(submission, session, csrfToken) {
     variables: { submissionId: submission.id },
   });
 
-  const headers = graphqlHeaders(session, csrfToken);
+  const headers = graphqlHeaders(session, csrfToken, region);
+  const baseUrl = getBaseUrl(region);
 
   // No need to break on first request error since that would be done when getting submissions
   const getInfo = async (maxRetries = 5, retryCount = 0) => {
     try {
-      const response = await axios.post("https://leetcode.com/graphql/", data, {
+      const response = await axios.post(`${baseUrl}/graphql/`, data, {
         headers,
       });
       const submissionDetails = response.data?.data?.submissionDetails;
@@ -226,10 +234,11 @@ async function commit(params) {
   return [treeResponse.data.sha, commitResponse.data.sha];
 }
 
-async function getQuestionData(titleSlug, leetcodeSession, csrfToken) {
+async function getQuestionData(titleSlug, leetcodeSession, csrfToken, region = "us") {
   log(`Getting question data for ${titleSlug}...`);
 
-  const headers = graphqlHeaders(leetcodeSession, csrfToken);
+  const headers = graphqlHeaders(leetcodeSession, csrfToken, region);
+  const baseUrl = getBaseUrl(region);
   const graphql = JSON.stringify({
     query: `query getQuestionDetail($titleSlug: String!) {
       question(titleSlug: $titleSlug) {
@@ -241,7 +250,7 @@ async function getQuestionData(titleSlug, leetcodeSession, csrfToken) {
 
   try {
     const response = await axios.post(
-      "https://leetcode.com/graphql/",
+      `${baseUrl}/graphql/`,
       graphql,
       { headers }
     );
@@ -304,7 +313,11 @@ async function sync(inputs) {
     destinationFolder,
     verbose,
     commitHeader,
+    leetcodeRegion,
   } = inputs;
+
+  const region = leetcodeRegion;
+  const baseUrl = getBaseUrl(region);
 
   const octokit = new Octokit({
     auth: githubToken,
@@ -369,9 +382,9 @@ async function sync(inputs) {
           },
         });
 
-        const headers = graphqlHeaders(leetcodeSession, leetcodeCSRFToken);
+        const headers = graphqlHeaders(leetcodeSession, leetcodeCSRFToken, region);
         const response = await axios.post(
-          "https://leetcode.com/graphql/",
+          `${baseUrl}/graphql/`,
           graphql,
           { headers }
         );
@@ -431,7 +444,8 @@ async function sync(inputs) {
     submission = await getInfo(
       submissions[i],
       leetcodeSession,
-      leetcodeCSRFToken
+      leetcodeCSRFToken,
+      region
     );
 
     if (submission === null) {
@@ -443,7 +457,8 @@ async function sync(inputs) {
     const questionData = await getQuestionData(
       submission.titleSlug,
       leetcodeSession,
-      leetcodeCSRFToken
+      leetcodeCSRFToken,
+      region
     );
     if (questionData === null) {
       // Skip this submission if question data is null (locked problem)

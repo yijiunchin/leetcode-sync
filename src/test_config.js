@@ -13,4 +13,5 @@ module.exports = {
   DESTINATION_FOLDER: process.env.DESTINATION_FOLDER ?? "",
   VERBOSE: process.env.VERBOSE ?? true,
   COMMIT_HEADER: process.env.COMMIT_HEADER ?? "Sync LeetCode submission",
+  LEETCODE_REGION: process.env.LEETCODE_REGION ?? "us",
 };
